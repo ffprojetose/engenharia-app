@@ -1,6 +1,8 @@
 const Projeto = require('../models/Projeto');
 const Cliente = require('../models/Cliente');
 const Usuario = require('../models/Usuario');
+const Tarefa = require('../models/Tarefa');
+const Reuniao = require('../models/Reuniao');
 const { Op } = require('sequelize');
 
 // Criar novo projeto

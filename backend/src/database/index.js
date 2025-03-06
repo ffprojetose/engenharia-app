@@ -1,7 +1,13 @@
-const Sequelize = require('sequelize');
-const dbConfig = require('../config/database');
+const sequelize = require('../config/database');
 
-const connection = new Sequelize(dbConfig.development);
+// Testar a conexão
+sequelize.authenticate()
+  .then(() => {
+    console.log('Conexão com o banco de dados estabelecida com sucesso.');
+  })
+  .catch(err => {
+    console.error('Erro ao conectar com o banco de dados:', err);
+  });
 
 // Importar os modelos aqui
 const Usuario = require('../models/Usuario');
@@ -23,7 +29,7 @@ const models = [
   Financeiro
 ];
 
-models.forEach(model => model.init(connection));
-models.forEach(model => model.associate && model.associate(connection.models));
+models.forEach(model => model.init(sequelize));
+models.forEach(model => model.associate && model.associate(sequelize.models));
 
-module.exports = connection; 
+module.exports = sequelize; 

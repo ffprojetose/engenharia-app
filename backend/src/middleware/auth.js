@@ -2,43 +2,19 @@ const jwt = require('jsonwebtoken');
 const Usuario = require('../models/Usuario');
 
 // Middleware de autenticação
-const auth = async (req, res, next) => {
+const auth = (req, res, next) => {
   try {
-    // Verificar se o token existe no header
-    const token = req.headers.authorization?.split(' ')[1];
-    console.log('Token recebido:', token); // Log para debug
+    const token = req.header('Authorization')?.replace('Bearer ', '');
     
     if (!token) {
-      return res.status(401).json({ message: 'Token não fornecido' });
+      return res.status(401).json({ erro: 'Token não fornecido' });
     }
 
-    // Verificar se o token é válido
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log('Token decodificado:', decoded); // Log para debug
-    
-    // Buscar usuário
-    const usuario = await Usuario.findByPk(decoded.id);
-    if (!usuario) {
-      return res.status(401).json({ message: 'Usuário não encontrado' });
-    }
-
-    // Verificar se o usuário está ativo
-    if (!usuario.ativo) {
-      return res.status(401).json({ message: 'Usuário inativo' });
-    }
-
-    // Adicionar usuário ao request
-    req.usuario = usuario;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'seu_segredo_jwt');
+    req.usuario = decoded;
     next();
-  } catch (error) {
-    console.error('Erro na autenticação:', error); // Log para debug
-    if (error.name === 'JsonWebTokenError') {
-      return res.status(401).json({ message: 'Token inválido' });
-    }
-    if (error.name === 'TokenExpiredError') {
-      return res.status(401).json({ message: 'Token expirado' });
-    }
-    res.status(500).json({ message: 'Erro na autenticação', error: error.message });
+  } catch (erro) {
+    res.status(401).json({ erro: 'Token inválido' });
   }
 };
 
@@ -75,18 +51,10 @@ const verificarPermissao = (permissao) => {
 
 // Middleware apenas para admin
 const apenasAdmin = (req, res, next) => {
-  try {
-    const usuario = req.usuario;
-    
-    if (usuario.tipo !== 'admin') {
-      return res.status(403).json({ message: 'Acesso restrito a administradores' });
-    }
-
-    next();
-  } catch (error) {
-    console.error('Erro ao verificar admin:', error); // Log para debug
-    res.status(500).json({ message: 'Erro ao verificar permissão de admin', error: error.message });
+  if (req.usuario.tipo !== 'admin') {
+    return res.status(403).json({ erro: 'Acesso negado. Apenas administradores podem acessar este recurso.' });
   }
+  next();
 };
 
 module.exports = {

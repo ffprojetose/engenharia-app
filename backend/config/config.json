@@ -1,0 +1,59 @@
+{
+  "development": {
+    "username": "engenharia_app",
+    "password": "pNfMpwRmfJBFJ3py",
+    "database": "engenharia_app",
+    "host": "164.152.48.221",
+    "port": 3306,
+    "dialect": "mysql",
+    "define": {
+      "timestamps": true,
+      "underscored": true,
+      "underscoredAll": true
+    },
+    "dialectOptions": {
+      "useUTC": false,
+      "dateStrings": true,
+      "typeCast": true
+    },
+    "timezone": "-03:00"
+  },
+  "test": {
+    "username": "engenharia_app",
+    "password": "pNfMpwRmfJBFJ3py",
+    "database": "engenharia_app",
+    "host": "164.152.48.221",
+    "port": 3306,
+    "dialect": "mysql",
+    "define": {
+      "timestamps": true,
+      "underscored": true,
+      "underscoredAll": true
+    },
+    "dialectOptions": {
+      "useUTC": false,
+      "dateStrings": true,
+      "typeCast": true
+    },
+    "timezone": "-03:00"
+  },
+  "production": {
+    "username": "engenharia_app",
+    "password": "pNfMpwRmfJBFJ3py",
+    "database": "engenharia_app",
+    "host": "164.152.48.221",
+    "port": 3306,
+    "dialect": "mysql",
+    "define": {
+      "timestamps": true,
+      "underscored": true,
+      "underscoredAll": true
+    },
+    "dialectOptions": {
+      "useUTC": false,
+      "dateStrings": true,
+      "typeCast": true
+    },
+    "timezone": "-03:00"
+  }
+} 
