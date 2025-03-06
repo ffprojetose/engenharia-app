@@ -29,6 +29,14 @@ class Usuario extends Model {
         type: DataTypes.ENUM('admin', 'membro'),
         defaultValue: 'membro'
       },
+      cargo: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
+      telefone: {
+        type: DataTypes.STRING,
+        allowNull: true
+      },
       ativo: {
         type: DataTypes.BOOLEAN,
         defaultValue: true
@@ -41,9 +49,19 @@ class Usuario extends Model {
           if (usuario.senha) {
             usuario.senha = await bcrypt.hash(usuario.senha, 10);
           }
+        },
+        beforeUpdate: async (usuario) => {
+          if (usuario.changed('senha')) {
+            usuario.senha = await bcrypt.hash(usuario.senha, 10);
+          }
         }
       }
     });
+  }
+
+  // Método para verificar a senha
+  async checkPassword(senha) {
+    return bcrypt.compare(senha, this.senha);
   }
 }
 

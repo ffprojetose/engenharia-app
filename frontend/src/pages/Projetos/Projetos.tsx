@@ -125,61 +125,6 @@ function Projetos() {
     carregarUsuarios();
   }, []);
 
-  // Efeito para criar um projeto modelo
-  useEffect(() => {
-    const criarProjetoModelo = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-
-        const projetoModelo: CriarProjetoDTO = {
-          nome: 'Projeto Modelo',
-          descricao: 'Este é um projeto modelo criado automaticamente',
-          cliente_id: Number(formData.cliente_id),
-          responsavel_id: Number(formData.responsavel_id),
-          data_inicio: new Date().toISOString().split('T')[0],
-          data_previsao_fim: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-          status: 'em_planejamento',
-          orcamento: {
-            valorPrevisto: 0,
-            valorGasto: 0
-          },
-          fases: [
-            {
-              nome: 'Estudo Preliminar',
-              duracao: 15,
-              status: 'pendente'
-            },
-            {
-              nome: 'Anteprojeto',
-              duracao: 15,
-              status: 'pendente'
-            },
-            {
-              nome: 'Projeto Executivo',
-              duracao: 18,
-              status: 'pendente'
-            }
-          ],
-          documentos: [],
-          observacoes: ''
-        };
-
-        await criarProjeto(projetoModelo);
-        await carregarProjetos();
-      } catch (error: any) {
-        console.error('Erro ao criar projeto modelo:', error);
-        setError(error.response?.data?.message || 'Erro ao criar projeto modelo');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (projetos.length === 0) {
-      criarProjetoModelo();
-    }
-  }, [projetos.length]);
-
   const handleOpenDialog = (projeto?: Projeto) => {
     if (projeto) {
       setEditingProjeto(projeto);
@@ -436,6 +381,8 @@ function Projetos() {
                             ? 'success'
                             : fase.status === 'em_andamento'
                             ? 'primary'
+                            : fase.status === 'pendente'
+                            ? 'error'
                             : 'default'
                         }
                         sx={{ m: 0.5 }}

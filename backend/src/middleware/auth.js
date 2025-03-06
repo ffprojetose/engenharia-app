@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const Usuario = require('../models/Usuario');
 
 // Middleware de autenticação
-const auth = (req, res, next) => {
+const auth = async (req, res, next) => {
   try {
     const token = req.header('Authorization')?.replace('Bearer ', '');
     
@@ -11,7 +11,16 @@ const auth = (req, res, next) => {
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'seu_segredo_jwt');
-    req.usuario = decoded;
+    const usuario = await Usuario.findByPk(decoded.id);
+
+    if (!usuario) {
+      return res.status(401).json({ erro: 'Usuário não encontrado' });
+    }
+
+    req.usuario = {
+      id: usuario.id,
+      tipo: usuario.tipo
+    };
     next();
   } catch (erro) {
     res.status(401).json({ erro: 'Token inválido' });
